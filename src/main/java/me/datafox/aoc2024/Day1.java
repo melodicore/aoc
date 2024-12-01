@@ -5,11 +5,13 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
+ * Advent of Code 2024 day 1 solutions.
+ *
  * @author datafox
  */
 public class Day1 {
     public static int solve1(URL url) {
-        int[][] arr = FileUtils.resourceAsStream(url)
+        int[][] arr = FileUtils.linesAsStream(url)
                 .map(ArrUtils::splitRow)
                 .toArray(int[][]::new);
         arr = ArrUtils.rotate(arr);
@@ -21,7 +23,7 @@ public class Day1 {
     }
 
     public static int solve2(URL url) {
-        int[][] arr = FileUtils.resourceAsStream(url)
+        int[][] arr = FileUtils.linesAsStream(url)
                 .map(ArrUtils::splitRow)
                 .toArray(int[][]::new);
         arr = ArrUtils.rotate(arr);

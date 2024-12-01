@@ -3,6 +3,8 @@ package me.datafox.aoc2024;
 import java.util.Arrays;
 
 /**
+ * Utilities for handling arrays.
+ *
  * @author datafox
  */
 public class ArrUtils {

@@ -8,10 +8,12 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 /**
+ * Utilities for reading files.
+ *
  * @author datafox
  */
 public class FileUtils {
-    public static Stream<String> resourceAsStream(URL url) {
+    public static Stream<String> linesAsStream(URL url) {
         try {
             return Files.lines(Paths.get(url.toURI()));
         } catch(IOException | URISyntaxException e) {
