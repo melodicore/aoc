@@ -11,4 +11,9 @@ public class AoCTest {
     public void day1part1() {
         System.out.println(Day1.solve1(getClass().getResource("/day1.txt")));
     }
+
+    @Test
+    public void day1part2() {
+        System.out.println(Day1.solve2(getClass().getResource("/day1.txt")));
+    }
 }
