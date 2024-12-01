@@ -1,6 +1,6 @@
-package me.datafox.aoc2025.day1.test;
+package me.datafox.aoc2024.day1.test;
 
-import me.datafox.aoc2025.Day1;
+import me.datafox.aoc2024.Day1;
 import org.junit.jupiter.api.Test;
 
 /**

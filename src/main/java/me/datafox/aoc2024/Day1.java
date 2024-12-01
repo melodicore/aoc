@@ -1,8 +1,7 @@
-package me.datafox.aoc2025;
+package me.datafox.aoc2024;
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 /**
