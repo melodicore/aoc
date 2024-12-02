@@ -24,6 +24,13 @@ public class Day2 {
                 .count();
     }
 
+    public static long solve2efficient(URL url) {
+        return FileUtils.linesAsStream(url)
+                .map(ArrUtils::splitRow)
+                .filter(Day2::isAscendingOrDescendingPart2)
+                .count();
+    }
+
     private static boolean isAnyAscendingOrDescending(int[][] arr) {
         return Arrays.stream(arr).anyMatch(Day2::isAscendingOrDescending);
     }
@@ -71,5 +78,42 @@ public class Day2 {
             }
         }
         return result;
+    }
+
+    private static boolean isAscendingOrDescendingPart2(int[] arr) {
+        assert arr.length > 2;
+        boolean removed = false;
+        boolean ascending;
+        int compare = Integer.compare(arr[0], arr[1]);
+        if(compare == 0) {
+            compare = Integer.compare(arr[1], arr[2]);
+        }
+        if(compare < 0) {
+            ascending = true;
+        } else if(compare > 0) {
+            ascending = false;
+        } else {
+            return false;
+        }
+        int last = -1;
+        for(int i : arr) {
+            if(last == -1) {
+                last = i;
+                continue;
+            }
+            int diff = last - i;
+            if(ascending) {
+                diff = -diff;
+            }
+            if(diff < 1 || diff > 3) {
+                if(!removed) {
+                    removed = true;
+                } else {
+                    return false;
+                }
+            }
+            last = i;
+        }
+        return true;
     }
 }

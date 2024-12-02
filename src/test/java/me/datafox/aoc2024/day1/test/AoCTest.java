@@ -34,6 +34,11 @@ public class AoCTest {
         System.out.println(assertDoesNotThrow(() -> Day2.solve2(res(2))));
     }
 
+    @Test
+    public void day2part2efficient() {
+        System.out.println(assertDoesNotThrow(() -> Day2.solve2efficient(res(2))));
+    }
+
     private URL res(int day) {
         return getClass().getResource(String.format("/day%s.txt", day));
     }
