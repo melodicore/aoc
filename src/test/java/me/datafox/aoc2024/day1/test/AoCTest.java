@@ -1,6 +1,7 @@
 package me.datafox.aoc2024.day1.test;
 
 import me.datafox.aoc2024.Day1;
+import me.datafox.aoc2024.Day2;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
@@ -21,6 +22,16 @@ public class AoCTest {
     @Test
     public void day1part2() {
         System.out.println(assertDoesNotThrow(() -> Day1.solve2(res(1))));
+    }
+
+    @Test
+    public void day2part1() {
+        System.out.println(assertDoesNotThrow(() -> Day2.solve1(res(2))));
+    }
+
+    @Test
+    public void day2part2() {
+        System.out.println(assertDoesNotThrow(() -> Day2.solve2(res(2))));
     }
 
     private URL res(int day) {
