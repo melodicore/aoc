@@ -1,8 +1,9 @@
 package me.datafox.aoc2024;
 
 import java.net.URL;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Advent of Code 2024 day 3 solutions.
@@ -12,14 +13,37 @@ import java.util.stream.IntStream;
 public class Day3 {
     public static int solve1(URL url) {
         return FileUtils.linesAsStream(url)
-                .map(s -> s.split("mul\\("))
-                .flatMap(Arrays::stream)
+                .flatMap(StreamUtils.split("mul\\("))
                 .flatMapToInt(Day3::multiplyIfValid)
                 .sum();
     }
 
     public static int solve2(URL url) {
-        return 0;
+        return Stream.of(FileUtils.linesAsStream(url)
+                        .collect(Collectors.joining("")))
+                .map(Day3::removeDonts)
+                .flatMap(StreamUtils.split("mul\\("))
+                .flatMapToInt(Day3::multiplyIfValid)
+                .sum();
+    }
+
+    private static String removeDonts(String str) {
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        while(true) {
+            int j = str.indexOf("don't()", i);
+            if(j == -1) {
+                sb.append(str, i, str.length());
+                break;
+            }
+            sb.append(str, i, j);
+            j = str.indexOf("do()", j);
+            if(j == -1) {
+                break;
+            }
+            i = j;
+        }
+        return sb.toString();
     }
 
     private static IntStream multiplyIfValid(String str) {
