@@ -20,4 +20,12 @@ public class FileUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static String string(URL url) {
+        try {
+            return Files.readString(Paths.get(url.toURI()));
+        } catch(IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

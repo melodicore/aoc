@@ -1,9 +1,8 @@
 package me.datafox.aoc2024;
 
 import java.net.URL;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Advent of Code 2024 day 3 solutions.
@@ -19,9 +18,9 @@ public class Day3 {
     }
 
     public static int solve2(URL url) {
-        return Stream.of(FileUtils.linesAsStream(url)
-                        .collect(Collectors.joining("")))
+        return Optional.of(FileUtils.string(url))
                 .map(Day3::removeDonts)
+                .stream()
                 .flatMap(StreamUtils.split("mul\\("))
                 .flatMapToInt(Day3::multiplyIfValid)
                 .sum();
