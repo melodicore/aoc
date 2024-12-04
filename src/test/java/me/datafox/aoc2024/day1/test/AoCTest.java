@@ -34,6 +34,11 @@ public class AoCTest {
     }
 
     @Test
+    public void day2part2efficient() {
+        System.out.println(assertDoesNotThrow(() -> Day2.solve2efficient(res(2))));
+    }
+
+    @Test
     public void day3part1() {
         System.out.println(assertDoesNotThrow(() -> Day3.solve1(res(3))));
     }
@@ -44,8 +49,13 @@ public class AoCTest {
     }
 
     @Test
-    public void day2part2efficient() {
-        System.out.println(assertDoesNotThrow(() -> Day2.solve2efficient(res(2))));
+    public void day4part1() {
+        System.out.println(assertDoesNotThrow(() -> Day4.solve1(res(4))));
+    }
+
+    @Test
+    public void day4part2() {
+        System.out.println(assertDoesNotThrow(() -> Day4.solve2(res(4))));
     }
 
     private URL res(int day) {
