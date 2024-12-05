@@ -19,6 +19,16 @@ public class Day5 {
                 .mapToInt(Day5::getMiddlePage)
                 .sum();
     }
+    public static int solve1ruleMap(URL url) {
+        String[] split = FileUtils.string(url).split("\n\n");
+        assert split.length == 2;
+        Map<Integer,Set<Integer>> ruleMap = getRuleMap(parseRules(split[0]));
+        int[][] updates = parseUpdates(split[1]);
+        return Arrays.stream(updates)
+                .filter(u -> isValidUpdateRuleMap(u, ruleMap))
+                .mapToInt(Day5::getMiddlePage)
+                .sum();
+    }
 
     public static int solve2(URL url) {
         String[] split = FileUtils.string(url).split("\n\n");
@@ -29,6 +39,18 @@ public class Day5 {
         return Arrays.stream(updates)
                 .filter(u -> !isValidUpdate(u, rules))
                 .map(u -> getValidUpdate(u, rules, ruleMap))
+                .mapToInt(Day5::getMiddlePage)
+                .sum();
+    }
+
+    public static int solve2RuleMap(URL url) {
+        String[] split = FileUtils.string(url).split("\n\n");
+        assert split.length == 2;
+        Map<Integer,Set<Integer>> ruleMap = getRuleMap(parseRules(split[0]));
+        int[][] updates = parseUpdates(split[1]);
+        return Arrays.stream(updates)
+                .filter(u -> !isValidUpdateRuleMap(u, ruleMap))
+                .map(u -> getValidUpdateRuleMap(u, ruleMap))
                 .mapToInt(Day5::getMiddlePage)
                 .sum();
     }
@@ -113,6 +135,38 @@ public class Day5 {
                 }
             }
         } while(!isValidUpdate(pages, rules));
+        return pages;
+    }
+
+    private static boolean isValidUpdateRuleMap(int[] pages, Map<Integer,Set<Integer>> ruleMap) {
+        for(int i = 1; i < pages.length; i++) {
+            if(ruleMap.containsKey(pages[i])) {
+                for(int j = 0; j < i; j++) {
+                    if(ruleMap.get(pages[i]).contains(pages[j])) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private static int[] getValidUpdateRuleMap(int[] pages, Map<Integer,Set<Integer>> ruleMap) {
+        do {
+            for(int i = 1; i < pages.length; i++) {
+                if(!ruleMap.containsKey(pages[i])) {
+                    continue;
+                }
+                for(int j = 0; j < i; j++) {
+                    if(ruleMap.get(pages[i]).contains(pages[j])) {
+                        int temp = pages[i];
+                        pages[i] = pages[j];
+                        pages[j] = temp;
+                        break;
+                    }
+                }
+            }
+        } while(!isValidUpdateRuleMap(pages, ruleMap));
         return pages;
     }
 }

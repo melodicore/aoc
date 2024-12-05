@@ -64,8 +64,18 @@ public class AoCTest {
     }
 
     @Test
+    public void day5part1ruleMap() {
+        System.out.println(assertDoesNotThrow(() -> Day5.solve1ruleMap(res(5))));
+    }
+
+    @Test
     public void day5part2() {
         System.out.println(assertDoesNotThrow(() -> Day5.solve2(res(5))));
+    }
+
+    @Test
+    public void day5part2ruleMap() {
+        System.out.println(assertDoesNotThrow(() -> Day5.solve2RuleMap(res(5))));
     }
 
     private URL res(int day) {
