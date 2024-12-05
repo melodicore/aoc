@@ -1,7 +1,7 @@
 package me.datafox.aoc2024;
 
 import java.net.URL;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Advent of Code 2024 day 4 solutions.
@@ -21,7 +21,16 @@ public class Day5 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        String[] split = FileUtils.string(url).split("\n\n");
+        assert split.length == 2;
+        int[][] rules = parseRules(split[0]);
+        int[][] updates = parseUpdates(split[1]);
+        Map<Integer,Set<Integer>> ruleMap = getRuleMap(rules);
+        return Arrays.stream(updates)
+                .filter(u -> !isValidUpdate(u, rules))
+                .map(u -> getValidUpdate(u, rules, ruleMap))
+                .mapToInt(Day5::getMiddlePage)
+                .sum();
     }
 
     private static int[][] parseRules(String str) {
@@ -75,5 +84,35 @@ public class Day5 {
     private static int getMiddlePage(int[] pages) {
         assert pages.length % 2 == 1;
         return pages[pages.length / 2];
+    }
+
+    private static Map<Integer,Set<Integer>> getRuleMap(int[][] rules) {
+        Map<Integer,Set<Integer>> map = new HashMap<>();
+        for(int[] rule : rules) {
+            if(!map.containsKey(rule[0])) {
+                map.put(rule[0], new HashSet<>());
+            }
+            map.get(rule[0]).add(rule[1]);
+        }
+        return map;
+    }
+
+    private static int[] getValidUpdate(int[] pages, int[][] rules, Map<Integer,Set<Integer>> ruleMap) {
+        do {
+            for(int i = 1; i < pages.length; i++) {
+                if(!ruleMap.containsKey(pages[i])) {
+                    continue;
+                }
+                for(int j = 0; j < i; j++) {
+                    if(ruleMap.get(pages[i]).contains(pages[j])) {
+                        int temp = pages[i];
+                        pages[i] = pages[j];
+                        pages[j] = temp;
+                        break;
+                    }
+                }
+            }
+        } while(!isValidUpdate(pages, rules));
+        return pages;
     }
 }
