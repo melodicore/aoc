@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Advent of Code 2024 day 4 solutions.
+ * Advent of Code 2024 day 5 solutions.
  *
  * @author datafox
  */
