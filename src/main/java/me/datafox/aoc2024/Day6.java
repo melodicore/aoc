@@ -37,7 +37,49 @@ public class Day6 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        int width = map[0].length;
+        int height = map.length;
+        Set<Coordinate> obstacles = getOccurrences(map, '#');
+        Set<Coordinate> extras = new HashSet<>();
+        Direction dir = Direction.UP;
+        Coordinate current = getOccurrences(map, '^').iterator().next();
+        Coordinate start = current;
+        while(true) {
+            Coordinate next = current.move(dir, 1);
+            if(!extras.contains(next) && tryPlacement(obstacles, next, start, Direction.UP, width, height)) {
+                extras.add(next);
+            }
+            if(obstacles.contains(next)) {
+                dir = dir.rotateRight();
+                continue;
+            }
+            if(!next.isWithinBounds(0, 0, width - 1, height - 1)) {
+                break;
+            }
+            current = next;
+        }
+        return extras.size();
+    }
+
+    private static boolean tryPlacement(Set<Coordinate> obstacles, Coordinate placement, Coordinate current, Direction dir, int width, int height) {
+        Set<Move> turns = new HashSet<>();
+        while(true) {
+            Coordinate next = current.move(dir, 1);
+            if(placement.equals(next) || obstacles.contains(next)) {
+                dir = dir.rotateRight();
+                if(!turns.add(new Move(current, dir))) {
+                    return true;
+                }
+                continue;
+            }
+            if(!next.isWithinBounds(0, 0, width - 1, height - 1)) {
+                return false;
+            }
+            current = next;
+        }
     }
 
     private static Set<Coordinate> getOccurrences(char[][] map, char c) {
@@ -51,4 +93,6 @@ public class Day6 {
         }
         return set;
     }
+
+    private record Move(Coordinate coord, Direction dir) {}
 }
