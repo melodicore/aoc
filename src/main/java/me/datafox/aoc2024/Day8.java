@@ -26,7 +26,15 @@ public class Day8 {
     }
 
     public static long solve2(URL url) {
-        return 0;
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        Map<Character,Set<Coordinate>> antennas = getAntennas(map);
+        return antennas.values()
+                .stream()
+                .flatMap(coords -> getAllAntinodes(coords, map[0].length, map.length))
+                .distinct()
+                .count();
     }
 
     private static Map<Character,Set<Coordinate>> getAntennas(char[][] map) {
@@ -56,6 +64,28 @@ public class Day8 {
                 Coordinate a = c1.move(c1.diff(c2));
                 if(a.isWithinBounds(0, 0, width - 1, height - 1)) {
                     antinodes.add(a);
+                }
+            }
+        }
+        return antinodes.stream();
+    }
+
+    private static Stream<Coordinate> getAllAntinodes(Set<Coordinate> coords, int width, int height) {
+        Set<Coordinate> antinodes = new HashSet<>();
+        for(Coordinate c1 : coords) {
+            for(Coordinate c2 : coords) {
+                if(c1.equals(c2)) {
+                    continue;
+                }
+                Coordinate diff = c2.diff(c1);
+                Coordinate a = c1;
+                while(true) {
+                    a = a.move(diff);
+                    if(a.isWithinBounds(0, 0, width - 1, height - 1)) {
+                        antinodes.add(a);
+                    } else {
+                        break;
+                    }
                 }
             }
         }
