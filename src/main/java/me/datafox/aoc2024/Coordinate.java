@@ -4,9 +4,14 @@ package me.datafox.aoc2024;
  * @author datafox
  */
 public record Coordinate(int x, int y) {
+    public Coordinate move(Coordinate coord) {
+        return new Coordinate(x + coord.x, y + coord.y);
+    }
+
     public Coordinate move(int x, int y) {
         return new Coordinate(this.x + x, this.y + y);
     }
+
     public Coordinate move(Direction dir, int steps) {
         if(dir == null) {
             return this;
@@ -17,6 +22,10 @@ public record Coordinate(int x, int y) {
             case LEFT -> move(-steps, 0);
             case UP -> move(0, -steps);
         };
+    }
+
+    public Coordinate diff(Coordinate coord) {
+        return move(-coord.x, -coord.y);
     }
 
     public boolean isWithinBounds(int x1, int y1, int x2, int y2) {
