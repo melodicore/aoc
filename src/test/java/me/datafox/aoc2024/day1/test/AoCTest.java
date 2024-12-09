@@ -108,6 +108,16 @@ public class AoCTest {
         System.out.println(assertDoesNotThrow(() -> Day8.solve2(res(8))));
     }
 
+    @Test
+    public void day9part1() {
+        System.out.println(assertDoesNotThrow(() -> Day9.solve1(res(9))));
+    }
+
+    @Test
+    public void day9part2() {
+        System.out.println(assertDoesNotThrow(() -> Day9.solve2(res(9))));
+    }
+
     private URL res(int day) {
         return getClass().getResource(String.format("/day%s.txt", day));
     }
