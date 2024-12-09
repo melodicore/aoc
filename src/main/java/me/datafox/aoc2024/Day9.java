@@ -18,7 +18,11 @@ public class Day9 {
     }
 
     public static long solve2(URL url) {
-        return 0;
+        int[] input = FileUtils.string(url)
+                .chars()
+                .map(cp -> Character.digit(cp, 10))
+                .toArray();
+        return getChecksum(compactFiles(parseData(input)));
     }
 
     private static int[] parseData(int[] input) {
@@ -64,5 +68,39 @@ public class Day9 {
             checksum += (long) data[i] * i;
         }
         return checksum;
+    }
+
+    private static int[] compactFiles(int[] data) {
+        int length = 0;
+        for(int i = data.length - 1; i > 0; i--) {
+            length++;
+            if(data[i - 1] != data[i]) {
+                if(data[i] != -1) {
+                    moveFile(data, i, length);
+                }
+                length = 0;
+            }
+        }
+        return data;
+    }
+
+    private static void moveFile(int[] data, int index, int length) {
+        int file = data[index];
+        int start = 0;
+        int freeLength = 0;
+        for(int i = 0; i < index; i++) {
+            freeLength++;
+            if(data[i + 1] != data[i]) {
+                if(data[i] == -1 && length <= freeLength) {
+                    for(int j = 0; j < length; j++) {
+                        data[j + start] = file;
+                        data[j + index] = -1;
+                    }
+                    return;
+                }
+                freeLength = 0;
+                start = i + 1;
+            }
+        }
     }
 }
