@@ -19,7 +19,10 @@ public class Day9 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        return FileUtils.linesAsStream(url)
+                .map(ArrUtils::splitRow)
+                .mapToInt(Day9::extrapolateBack)
+                .sum();
     }
 
     private static int extrapolate(int[] arr) {
@@ -39,6 +42,26 @@ public class Day9 {
             return arr[arr.length - 1] + last;
         } else {
             return arr[arr.length - 1] + extrapolate(diff);
+        }
+    }
+
+    private static int extrapolateBack(int[] arr) {
+        int[] diff = new int[arr.length - 1];
+        int last = 0;
+        boolean finished = true;
+        for(int i = 0; i < diff.length; i++) {
+            diff[i] = arr[i + 1] - arr[i];
+            if(i != 0) {
+                if(last != diff[i]) {
+                    finished = false;
+                }
+            }
+            last = diff[i];
+        }
+        if(finished) {
+            return arr[0] - last;
+        } else {
+            return arr[0] - extrapolateBack(diff);
         }
     }
 }
