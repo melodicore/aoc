@@ -22,6 +22,7 @@ public class AoC2023Test {
     public void day1part2() {
         System.out.println(assertDoesNotThrow(() -> Day1.solve2(res(1))));
     }
+
     @Test
     public void day2part1() {
         System.out.println(assertDoesNotThrow(() -> Day2.solve1(res(2))));
@@ -30,6 +31,16 @@ public class AoC2023Test {
     @Test
     public void day2part2() {
         System.out.println(assertDoesNotThrow(() -> Day2.solve2(res(2))));
+    }
+
+    @Test
+    public void day3part1() {
+        System.out.println(assertDoesNotThrow(() -> Day3.solve1(res(3))));
+    }
+
+    @Test
+    public void day3part2() {
+        System.out.println(assertDoesNotThrow(() -> Day3.solve2(res(3))));
     }
 
     private URL res(int day) {
