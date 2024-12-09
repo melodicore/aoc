@@ -31,7 +31,13 @@ public class Day6 {
     }
 
     public static long solve2(URL url) {
-        return 0;
+        String[] split = FileUtils.linesAsStream(url)
+            .map(s -> s.split(".+: +", 2)[1])
+            .toArray(String[]::new);
+        assert split.length == 2;
+        long time = Long.parseLong(split[0].replaceAll(" +", ""));
+        long distance = Long.parseLong(split[1].replaceAll(" +", ""));
+        return getPossibilities(time, distance);
     }
 
     private static long getPossibilities(long time, long distance) {
