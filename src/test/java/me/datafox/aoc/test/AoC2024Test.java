@@ -1,6 +1,6 @@
-package me.datafox.aoc2024.day1.test;
+package me.datafox.aoc.test;
 
-import me.datafox.aoc2024.*;
+import me.datafox.aoc.aoc2024.*;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
  *
  * @author datafox
  */
-public class AoCTest {
+public class AoC2024Test {
     @Test
     public void day1part1() {
         System.out.println(assertDoesNotThrow(() -> Day1.solve1(res(1))));
@@ -119,6 +119,6 @@ public class AoCTest {
     }
 
     private URL res(int day) {
-        return getClass().getResource(String.format("/day%s.txt", day));
+        return getClass().getResource(String.format("/2024/day%s.txt", day));
     }
 }

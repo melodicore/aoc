@@ -1,4 +1,4 @@
-package me.datafox.aoc2024;
+package me.datafox.aoc;
 
 import java.util.Arrays;
 import java.util.function.Function;

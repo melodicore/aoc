@@ -1,4 +1,6 @@
-package me.datafox.aoc2024;
+package me.datafox.aoc.aoc2024;
+
+import me.datafox.aoc.FileUtils;
 
 import java.net.URL;
 import java.util.*;
