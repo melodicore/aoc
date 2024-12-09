@@ -19,7 +19,10 @@ public class Day2 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        return FileUtils.linesAsStream(url)
+                .map(Day2::parseGame)
+                .mapToInt(Game::power)
+                .sum();
     }
 
     private static Game parseGame(String str) {
@@ -50,6 +53,10 @@ public class Day2 {
     private record Game(int id, int red, int green, int blue) {
         public boolean isPossible() {
             return red <= 12 && green <= 13 && blue <= 14;
+        }
+
+        public int power() {
+            return red * green * blue;
         }
     }
 }
