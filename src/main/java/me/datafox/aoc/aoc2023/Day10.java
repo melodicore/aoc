@@ -24,7 +24,54 @@ public class Day10 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        LinkedHashMap<Coordinate,Set<Direction>> pipes = parsePipes(map);
+        Coordinate start = pipes.lastEntry().getKey();
+        removeDisconnected(pipes, start);
+        return calculateInside(pipes, map[0].length, map.length);
+    }
+
+    private static int calculateInside(LinkedHashMap<Coordinate,Set<Direction>> pipes, int width, int height) {
+        Set<Direction> horizontal = EnumSet.of(Direction.LEFT, Direction.RIGHT);
+        Direction lastCornerHorizontal = null;
+        int count = 0;
+        for(int x = 0; x < width; x++) {
+            boolean inside = false;
+            for(int y = 0; y < height; y++) {
+                Coordinate coord = new Coordinate(x, y);
+                if(!pipes.containsKey(coord)) {
+                    if(inside) {
+                        count++;
+                    }
+                } else if(pipes.get(coord).equals(horizontal)) {
+                    inside = !inside;
+                } else {
+                    Set<Direction> pipe = pipes.get(coord);
+                    if(pipe.contains(Direction.LEFT)) {
+                        if(lastCornerHorizontal == null) {
+                            lastCornerHorizontal = Direction.LEFT;
+                        } else if(lastCornerHorizontal == Direction.RIGHT) {
+                            inside = !inside;
+                            lastCornerHorizontal = null;
+                        } else {
+                            lastCornerHorizontal = null;
+                        }
+                    } else if(pipe.contains(Direction.RIGHT)) {
+                        if(lastCornerHorizontal == null) {
+                            lastCornerHorizontal = Direction.RIGHT;
+                        } else if(lastCornerHorizontal == Direction.LEFT) {
+                            inside = !inside;
+                            lastCornerHorizontal = null;
+                        } else {
+                            lastCornerHorizontal = null;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
     }
 
     private static LinkedHashMap<Coordinate,Set<Direction>> parsePipes(char[][] map) {
