@@ -32,6 +32,16 @@ public class Day11 {
         return pairs.stream().mapToLong(Day11::calculateDistance).sum();
     }
 
+    public static long solve2efficient(URL url) {
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        Set<Coordinate> galaxies = getGalaxies(map);
+        galaxies = expandSpaceEfficient(galaxies, 999999);
+        List<Coordinate[]> pairs = getPairs(galaxies);
+        return pairs.stream().mapToLong(Day11::calculateDistance).sum();
+    }
+
     private static Set<Coordinate> getGalaxies(char[][] map) {
         Set<Coordinate> set = new HashSet<>();
         for(int i = 0; i < map.length; i++) {
@@ -95,5 +105,43 @@ public class Day11 {
 
     private static int calculateDistance(Coordinate[] pair) {
         return pair[0].distance(pair[1]);
+    }
+
+    private static Set<Coordinate> expandSpaceEfficient(Set<Coordinate> galaxies, int count) {
+        int maxX = galaxies.stream().mapToInt(Coordinate::x).max().orElse(0);
+        int maxY = galaxies.stream().mapToInt(Coordinate::y).max().orElse(0);
+        Set<Integer> xExpands = new HashSet<>();
+        for(int x = 0; x <= maxX; x++) {
+            boolean empty = true;
+            for(int y = 0; y <= maxY; y++) {
+                if(galaxies.contains(new Coordinate(x, y))) {
+                    empty = false;
+                }
+            }
+            if(empty) {
+                xExpands.add(x);
+            }
+        }
+        int yOffset = 0;
+        Set<Coordinate> result = new HashSet<>();
+        for(int y = 0; y <= maxY; y++) {
+            boolean empty = true;
+            int xOffset = 0;
+            for(int x = 0; x <= maxX; x++) {
+                if(xExpands.contains(x)) {
+                    xOffset += count;
+                    continue;
+                }
+                Coordinate coord = new Coordinate(x, y);
+                if(galaxies.contains(coord)) {
+                    result.add(coord.move(xOffset, yOffset));
+                    empty = false;
+                }
+            }
+            if(empty) {
+                yOffset += count;
+            }
+        }
+        return result;
     }
 }

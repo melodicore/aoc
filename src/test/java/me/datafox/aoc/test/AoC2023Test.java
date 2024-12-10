@@ -123,6 +123,11 @@ public class AoC2023Test {
         System.out.println(assertDoesNotThrow(() -> Day11.solve2(res(11))));
     }
 
+    @Test
+    public void day11part2efficient() {
+        System.out.println(assertDoesNotThrow(() -> Day11.solve2efficient(res(11))));
+    }
+
     private URL res(int day) {
         return getClass().getResource(String.format("/2023/day%s.txt", day));
     }
