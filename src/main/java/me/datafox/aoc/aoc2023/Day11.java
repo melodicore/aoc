@@ -17,13 +17,19 @@ public class Day11 {
                 .map(String::toCharArray)
                 .toArray(char[][]::new);
         Set<Coordinate> galaxies = getGalaxies(map);
-        galaxies = expandSpace(galaxies);
+        galaxies = expandSpace(galaxies, 1);
         List<Coordinate[]> pairs = getPairs(galaxies);
         return pairs.stream().mapToInt(Day11::calculateDistance).sum();
     }
 
-    public static int solve2(URL url) {
-        return 0;
+    public static long solve2(URL url) {
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        Set<Coordinate> galaxies = getGalaxies(map);
+        galaxies = expandSpace(galaxies, 999999);
+        List<Coordinate[]> pairs = getPairs(galaxies);
+        return pairs.stream().mapToLong(Day11::calculateDistance).sum();
     }
 
     private static Set<Coordinate> getGalaxies(char[][] map) {
@@ -38,7 +44,7 @@ public class Day11 {
         return set;
     }
 
-    private static Set<Coordinate> expandSpace(Set<Coordinate> galaxies) {
+    private static Set<Coordinate> expandSpace(Set<Coordinate> galaxies, int count) {
         int maxX = galaxies.stream().mapToInt(Coordinate::x).max().orElse(0);
         int maxY = galaxies.stream().mapToInt(Coordinate::y).max().orElse(0);
         int offset = 0;
@@ -53,7 +59,7 @@ public class Day11 {
                 }
             }
             if(empty) {
-                offset++;
+                offset += count;
             }
         }
         galaxies = result;
@@ -70,7 +76,7 @@ public class Day11 {
                 }
             }
             if(empty) {
-                offset++;
+                offset += count;
             }
         }
         return result;
