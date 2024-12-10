@@ -20,7 +20,16 @@ public class Day10 {
                 .map(String::toCharArray)
                 .toArray(char[][]::new);
         Map<Coordinate,Tile> tiles = getTiles(map);
-        Map<Coordinate,Tile> heads = connectTiles(tiles);
+        Map<Coordinate,Tile> heads = connectTiles(tiles, false);
+        return heads.values().stream().flatMap(Day10::traverse).count();
+    }
+
+    public static long solve2(URL url) {
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        Map<Coordinate,Tile> tiles = getTiles(map);
+        Map<Coordinate,Tile> heads = connectTiles(tiles, true);
         return heads.values().stream().flatMap(Day10::traverse).count();
     }
 
@@ -29,10 +38,6 @@ public class Day10 {
             return Stream.of(tile);
         }
         return tile.next().stream().flatMap(Day10::traverse);
-    }
-
-    public static int solve2(URL url) {
-        return 0;
     }
 
     private static Map<Coordinate,Tile> getTiles(char[][] map) {
@@ -49,7 +54,7 @@ public class Day10 {
         return tiles;
     }
 
-    private static Map<Coordinate,Tile> connectTiles(Map<Coordinate,Tile> tiles) {
+    private static Map<Coordinate,Tile> connectTiles(Map<Coordinate,Tile> tiles, boolean part2) {
         Map<Coordinate,Tile> heads = new HashMap<>(tiles
                 .entrySet()
                 .stream()
@@ -57,12 +62,15 @@ public class Day10 {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue)));
-        heads.forEach((c, t) -> connectTiles(c, t, tiles, new HashSet<>()));
+        heads.forEach((c, t) -> connectTiles(c, t, tiles, part2 ? null : new HashSet<>()));
         return heads;
     }
 
     private static boolean connectTiles(Coordinate coord, Tile tile, Map<Coordinate,Tile> tiles, Set<Tile> visitedPeaks) {
         if(tile.height() == 9) {
+            if(visitedPeaks == null) {
+                return true;
+            }
             return visitedPeaks.add(tile);
         }
         boolean successful = false;
