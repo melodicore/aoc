@@ -31,4 +31,8 @@ public record Coordinate(int x, int y) {
     public boolean isWithinBounds(int x1, int y1, int x2, int y2) {
         return x >= x1 && y >= y1 && x <= x2 && y <= y2;
     }
+
+    public int distance(Coordinate coord) {
+        return Math.abs(x - coord.x) + Math.abs(y - coord.y);
+    }
 }
