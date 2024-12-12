@@ -138,6 +138,16 @@ public class AoC2024Test {
         System.out.println(assertDoesNotThrow(() -> Day11.solve2(res(11))));
     }
 
+    @Test
+    public void day12part1() {
+        System.out.println(assertDoesNotThrow(() -> Day12.solve1(res(12))));
+    }
+
+    @Test
+    public void day12part2() {
+        System.out.println(assertDoesNotThrow(() -> Day12.solve2(res(12))));
+    }
+
     private URL res(int day) {
         return getClass().getResource(String.format("/2024/day%s.txt", day));
     }
