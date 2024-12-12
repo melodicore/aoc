@@ -5,8 +5,7 @@ import me.datafox.aoc.Direction;
 import me.datafox.aoc.FileUtils;
 
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Advent of Code 2024 day 11 solutions.
@@ -23,7 +22,11 @@ public class Day12 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        Set<Set<Coordinate>> regions = parseRegions(map);
+        return regions.stream().mapToInt(Day12::calculateCostPart2).sum();
     }
 
     private static Set<Set<Coordinate>> parseRegions(char[][] map) {
@@ -78,5 +81,50 @@ public class Day12 {
             }
         }
         return boundary * region.size();
+    }
+
+    private static int calculateCostPart2(Set<Coordinate> region) {
+        if(region.isEmpty()) {
+            return 0;
+        }
+        int minX = region.stream().mapToInt(Coordinate::x).min().getAsInt();
+        int maxX = region.stream().mapToInt(Coordinate::x).max().getAsInt();
+        int minY = region.stream().mapToInt(Coordinate::y).min().getAsInt();
+        int maxY = region.stream().mapToInt(Coordinate::y).max().getAsInt();
+        int edges = 0;
+        Map<Direction,Set<Coordinate>> visited = new HashMap<>();
+        Arrays.stream(Direction.values()).forEach(dir -> visited.put(dir, new HashSet<>()));
+        for(Coordinate coord : region) {
+            for(Direction dir : Direction.values()) {
+                Coordinate next = coord.move(dir, 1);
+                if(region.contains(next) || visited.get(dir).contains(next)) {
+                    continue;
+                }
+                boolean horizontal = dir.equals(Direction.UP) || dir.equals(Direction.DOWN);
+                Coordinate check = next;
+                do {
+                    visited.get(dir).add(check);
+                    if(horizontal) {
+                        check = check.move(-1, 0);
+                    } else {
+                        check = check.move(0, -1);
+                    }
+                } while(!region.contains(check) &&
+                        (horizontal ? check.x() : check.y()) >= (horizontal ? minX : minY) &&
+                        region.contains(check.move(dir.opposite(), 1)));
+                check = next;
+                do {
+                    visited.get(dir).add(check);
+                    if(horizontal) {
+                        check = check.move(1, 0);
+                    } else {
+                        check = check.move(0, 1);
+                    }
+                } while(!region.contains(check) && (horizontal ? check.x() : check.y()) <= (horizontal ? maxX : maxY) &&
+                        region.contains(check.move(dir.opposite(), 1)));
+                edges++;
+            }
+        }
+        return edges * region.size();
     }
 }
