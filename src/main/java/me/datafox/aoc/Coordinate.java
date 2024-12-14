@@ -35,4 +35,20 @@ public record Coordinate(int x, int y) {
     public int distance(Coordinate coord) {
         return Math.abs(x - coord.x) + Math.abs(y - coord.y);
     }
+
+    public Coordinate multiply(int n) {
+        return new Coordinate(x * n, y * n);
+    }
+
+    public Coordinate modulo(int x, int y) {
+        int tx = this.x;
+        int ty = this.y;
+        if(tx < 0) {
+            tx += (Math.abs(tx) / x + 1) * x;
+        }
+        if(ty < 0) {
+            ty += (Math.abs(ty) / y + 1) * y;
+        }
+        return new Coordinate(tx % x, ty % y);
+    }
 }
