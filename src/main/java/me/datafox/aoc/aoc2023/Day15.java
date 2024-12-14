@@ -4,6 +4,8 @@ import me.datafox.aoc.FileUtils;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Advent of Code 2023 day 15 solutions.
@@ -79,6 +81,31 @@ public class Day15 {
         return sum;
     }
 
+    public static int solve2Cheeky(URL url) {
+        Map<Cheek,Integer> map = new HashMap<>(256, 1f);
+        for(String s : FileUtils.string(url).split(",")) {
+            String[] split = s.split("[-=]", 2);
+            Cheek cheek = new Cheek(split[0]);
+            if(split[1].isEmpty()) {
+                map.remove(cheek);
+            } else {
+                map.put(cheek, Integer.parseInt(split[1]));
+            }
+        }
+        int bucket = -1;
+        int count = -1;
+        int sum = 0;
+        for(Map.Entry<Cheek,Integer> e : map.entrySet()) {
+            if(e.getKey().hash() != bucket) {
+                count = 1;
+                bucket = e.getKey().hash();
+            }
+            sum += (bucket + 1) * count * e.getValue();
+            count++;
+        }
+        return sum;
+    }
+
     private static int hash(String s) {
         int hash = 0;
         for(int i : s.toCharArray()) {
@@ -95,5 +122,21 @@ public class Day15 {
         public int value;
 
         public Node next;
+    }
+
+    private record Cheek(String id, int hash) {
+        private Cheek(String id) {
+            this(id, Day15.hash(id));
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Cheek other && id.equals(other.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
     }
 }
