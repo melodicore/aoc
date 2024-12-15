@@ -58,7 +58,7 @@ public class Day15 {
         Set<Coordinate> boxes = new HashSet<>();
         Set<Coordinate> robot = new HashSet<>();
         for(int i = 0; i < map.length; i++) {
-            for(int j = 0; j < map.length; j++) {
+            for(int j = 0; j < map[i].length; j++) {
                 char c = map[i][j];
                 if(c == '.') {
                     continue;
