@@ -35,7 +35,37 @@ public class Day16 {
     }
 
     public static long solve2(URL url) {
-        return 0;
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        height = map.length;
+        width = map[0].length;
+        Map<Coordinate,Mirror> mirrors = parseMirrors(map);
+        Map<Direction,Set<Coordinate>> visited = Arrays.stream(Direction.values())
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        d -> new HashSet<>()));
+        long max = 0;
+        for(int i = 0; i < width; i++) {
+            moveLight(new Coordinate(i, -1), Direction.DOWN, mirrors, visited);
+            max = Math.max(max, visited.values().stream().flatMap(Set::stream).distinct().count());
+            visited.values().forEach(Set::clear);
+            moveLight(new Coordinate(i, height), Direction.UP, mirrors, visited);
+            max = Math.max(max, visited.values().stream().flatMap(Set::stream).distinct().count());
+            visited.values().forEach(Set::clear);
+        }
+        for(int i = 0; i < height; i++) {
+            moveLight(new Coordinate(-1, i), Direction.RIGHT, mirrors, visited);
+            max = Math.max(max, visited.values().stream().flatMap(Set::stream).distinct().count());
+            visited.values().forEach(Set::clear);
+            moveLight(new Coordinate(width, i), Direction.LEFT, mirrors, visited);
+            max = Math.max(max, visited.values().stream().flatMap(Set::stream).distinct().count());
+            visited.values().forEach(Set::clear);
+        }
+        Coordinate coord = new Coordinate(-1, 0);
+        Direction dir = Direction.RIGHT;
+        moveLight(coord, dir, mirrors, visited);
+        return max;
     }
 
     private static void moveLight(Coordinate coord, Direction dir, Map<Coordinate,Mirror> mirrors, Map<Direction,Set<Coordinate>> visited) {
