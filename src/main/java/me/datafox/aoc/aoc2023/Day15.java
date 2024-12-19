@@ -81,7 +81,7 @@ public class Day15 {
         return sum;
     }
 
-    public static int solve2Cheeky(URL url) {
+    public static int solve2cheeky(URL url) {
         Map<Cheek,Integer> map = new HashMap<>(256, 1f);
         for(String s : FileUtils.string(url).split(",")) {
             String[] split = s.split("[-=]", 2);

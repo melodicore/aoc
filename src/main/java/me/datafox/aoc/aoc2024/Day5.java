@@ -45,7 +45,7 @@ public class Day5 {
                 .sum();
     }
 
-    public static int solve2RuleMap(URL url) {
+    public static int solve2ruleMap(URL url) {
         String[] split = FileUtils.string(url).split("\n\n");
         assert split.length == 2;
         Map<Integer,Set<Integer>> ruleMap = getRuleMap(parseRules(split[0]));
