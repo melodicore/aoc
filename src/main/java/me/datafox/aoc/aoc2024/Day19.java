@@ -21,8 +21,14 @@ public class Day19 {
         return split[1].lines().filter(d -> isValidDesign(d, patterns)).count();
     }
 
-    public static int solve2(URL url) {
-        return 0;
+    public static long solve2(URL url) {
+        String[] split = FileUtils.string(url).split("\n\n");
+        Map<Integer,Set<String>> patterns = Arrays
+                .stream(split[0].split(", "))
+                .reduce(new TreeMap<>(Comparator.reverseOrder()),
+                        Day19::accumulatePatterns,
+                        Day19::combinePatterns);
+        return split[1].lines().mapToLong(d -> countValidDesigns(d, patterns)).sum();
     }
 
     private static Map<Integer,Set<String>> accumulatePatterns(Map<Integer,Set<String>> map, String pattern) {
@@ -62,5 +68,38 @@ public class Day19 {
         }
         fails.add(current);
         return false;
+    }
+
+    private static long countValidDesigns(String design, Map<Integer,Set<String>> patterns) {
+        return countValidDesigns("", design, new HashSet<>(), new HashMap<>(), patterns);
+    }
+
+    private static long countValidDesigns(String current, String design, Set<String> fails, Map<String,Long> successes, Map<Integer,Set<String>> patterns) {
+        if(successes.containsKey(current)) {
+            return successes.get(current);
+        }
+        if(fails.stream().anyMatch(current::startsWith)) {
+            return 0;
+        }
+        long count = patterns.entrySet().stream().mapToLong(entry -> {
+            int length = current.length() + entry.getKey();
+            if(length > design.length()) {
+                return 0;
+            }
+            String check = design.substring(current.length(), length);
+            if(!entry.getValue().contains(check)) {
+                return 0;
+            }
+            if(length == design.length()) {
+                return 1;
+            }
+            return countValidDesigns(current + check, design, fails, successes, patterns);
+        }).sum();
+        if(count == 0) {
+            fails.add(current);
+        } else {
+            successes.put(current, count);
+        }
+        return count;
     }
 }
