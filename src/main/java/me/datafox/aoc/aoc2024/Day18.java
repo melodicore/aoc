@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Advent of Code 2024 day 17 solutions.
+ * Advent of Code 2024 day 18 solutions.
  *
  * @author datafox
  */
@@ -33,8 +33,23 @@ public class Day18 {
         return path.size() - 1;
     }
 
-    public static int solve2(URL url) {
-        return 0;
+    public static String solve2(URL url) {
+        List<Coordinate> walls = FileUtils.linesAsStream(url)
+                .map(s -> s.split(","))
+                .map(a -> new Coordinate(
+                        Integer.parseInt(a[0]),
+                        Integer.parseInt(a[1])))
+                .toList();
+        Coordinate start = new Coordinate(0, 0);
+        Coordinate end = new Coordinate(WIDTH - 1, HEIGHT - 1);
+        List<Coordinate> path;
+        int count = WALLS;
+        do {
+            count++;
+            path = getPath(new HashSet<>(walls.subList(0, count)), start, end);
+        } while(path != null);
+        Coordinate coord = walls.get(count - 1);
+        return coord.x() + "," + coord.y();
     }
 
     private static List<Coordinate> getPath(Set<Coordinate> walls, Coordinate start, Coordinate end) {
@@ -56,6 +71,9 @@ public class Day18 {
                     nextIter.add(node);
                     visited.add(node.coord());
                 }
+            }
+            if(nextIter.isEmpty()) {
+                return null;
             }
             currentIter.clear();
             currentIter.addAll(nextIter);
