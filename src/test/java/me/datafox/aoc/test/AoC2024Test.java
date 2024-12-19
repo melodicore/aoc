@@ -172,7 +172,7 @@ public class AoC2024Test {
     public void day15part2() {
         test(15, "2");
     }
-/*
+
     @Test
     public void day16part1() {
         test(16, "1");
@@ -182,7 +182,7 @@ public class AoC2024Test {
     public void day16part2() {
         test(16, "2");
     }
-*/
+
     @Test
     public void day17part1() {
         test(17, "1");
