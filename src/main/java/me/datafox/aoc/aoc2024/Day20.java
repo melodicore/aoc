@@ -5,10 +5,9 @@ import me.datafox.aoc.Direction;
 import me.datafox.aoc.FileUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 /**
  * Advent of Code 2024 day 19 solutions.
@@ -30,7 +29,11 @@ public class Day20 {
     }
 
     public static long solve2(URL url) {
-        return 0;
+        char[][] map = FileUtils.linesAsStream(url)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+        List<Coordinate> track = parseTrack(map);
+        return getCheatPathSavingsOver(track, 100);
     }
 
     private static List<Coordinate> parseTrack(char[][] map) {
@@ -55,6 +58,7 @@ public class Day20 {
                         break;
                     }
                 }
+                assert dir != null;
             }
             Coordinate coord = track.getLast().move(dir, 1);
             if(map[coord.y()][coord.x()] == '#') {
@@ -116,5 +120,30 @@ public class Day20 {
             return xs > 0 ? Direction.RIGHT : Direction.LEFT;
         }
         return ys > 0 ? Direction.DOWN : Direction.UP;
+    }
+
+    private static int getCheatPathSavingsOver(List<Coordinate> track, int over) {
+        int[] count = new int[] { 0 };
+        IntStream.range(0, track.size()).forEach(new IntConsumer() {
+            @Override
+            public void accept(int i) {
+                for(int j = track.size() - 1; j >= i; j--) {
+                    Coordinate start = track.get(i);
+                    Coordinate end = track.get(j);
+                    int length = start.distance(end);
+                    if(length > 20) {
+                        continue;
+                    }
+                    int origLength = j - i;
+                    if(length == origLength) {
+                        break;
+                    }
+                    if(origLength - length >= over) {
+                        count[0]++;
+                    }
+                }
+            }
+        });
+        return count[0];
     }
 }
