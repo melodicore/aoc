@@ -10,7 +10,7 @@ import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
 /**
- * Advent of Code 2024 day 19 solutions.
+ * Advent of Code 2024 day 20 solutions.
  *
  * @author datafox
  */
