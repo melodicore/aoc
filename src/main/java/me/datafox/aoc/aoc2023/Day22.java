@@ -34,7 +34,21 @@ public class Day22 {
     }
 
     public static int solve2(URL url) {
-        return 0;
+        List<Block> blocks = FileUtils.linesAsStream(url)
+                .map(Block::parseBlock)
+                .toList();
+        List<Block> fallen = blocks;
+        do {
+            blocks = fallen;
+            fallen = fall(fallen);
+        } while(!blocks.equals(fallen));
+        List<Block> finalBlocks = blocks;
+        return blocks.stream()
+                .map(b -> finalBlocks.stream()
+                        .filter(Predicate.not(Predicate.isEqual(b)))
+                        .toList())
+                .mapToInt(Day22::countFalling)
+                .sum();
     }
 
     private static Coordinate3 parseCoordinate(String str) {
@@ -66,7 +80,23 @@ public class Day22 {
         return blocks;
     }
 
-    private record Block(Set<Coordinate3> coords) {
+    private static int countFalling(List<Block> blocks) {
+        List<Block> original = new ArrayList<>(blocks);
+        List<Block> fallen = blocks;
+        do {
+            blocks = fallen;
+            fallen = fall(fallen);
+        } while(!blocks.equals(fallen));
+        original.removeAll(blocks);
+        return original.size();
+    }
+
+    private record Block(int index, Set<Coordinate3> coords) {
+        private static int i = 0;
+        public Block(Set<Coordinate3> coords) {
+            this(i++, coords);
+        }
+
         public static Block parseBlock(String str) {
             String[] split = str.split("~");
             assert split.length == 2;
@@ -92,19 +122,19 @@ public class Day22 {
         }
 
         public Block fall() {
-            return new Block(coords.stream().map(c -> c.move(0, 0, -1)).collect(Collectors.toSet()));
+            return new Block(index, coords.stream().map(c -> c.move(0, 0, -1)).collect(Collectors.toSet()));
         }
 
         @Override
         public boolean equals(Object object) {
             if(this == object) return true;
             if(!(object instanceof Block block)) return false;
-            return Objects.equals(coords, block.coords);
+            return index == block.index && Objects.equals(coords, block.coords);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(coords);
+            return Objects.hash(index, coords);
         }
     }
 }
