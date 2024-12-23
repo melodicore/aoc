@@ -238,6 +238,16 @@ public class AoC2023Test {
         test(22, "2");
     }
 
+    @Test
+    public void day23part1() {
+        test(23, "1");
+    }
+
+    @Test
+    public void day23part2() {
+        test(23, "2");
+    }
+
     private void test(int day, String part) {
         TestUtils.test(2023, day, part);
     }
