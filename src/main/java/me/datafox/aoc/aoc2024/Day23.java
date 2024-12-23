@@ -4,6 +4,7 @@ import me.datafox.aoc.FileUtils;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Advent of Code 2024 day 23 solutions.
@@ -19,8 +20,21 @@ public class Day23 {
         return groups.stream().filter(g -> g.stream().anyMatch(s -> s.startsWith("t"))).count();
     }
 
-    public static int solve2(URL url) {
-        return 0;
+    public static String solve2(URL url) {
+        Map<String,Set<String>> connections = FileUtils.linesAsStream(url)
+                .map(s -> s.split("-"))
+                .reduce(new HashMap<>(), Day23::accumulate, Day23::combine);
+        Set<Set<String>> groups = getGroups(connections, 3);
+        Set<String> solution = null;
+        while(true) {
+            groups = getNext(connections, groups);
+            if(groups.isEmpty()) {
+                break;
+            }
+            solution = groups.iterator().next();
+        }
+        assert solution != null;
+        return solution.stream().sorted().collect(Collectors.joining(","));
     }
 
     private static Map<String,Set<String>> accumulate(Map<String,Set<String>> map, String[] connection) {
@@ -76,5 +90,18 @@ public class Day23 {
             }
         }
         return groups;
+    }
+
+    private static Set<Set<String>> getNext(Map<String,Set<String>> connections, Set<Set<String>> groups) {
+        Set<Set<String>> newGroups = new HashSet<>();
+        int len = groups.iterator().next().size();
+        for(Set<String> group : groups) {
+            Set<String> con = connections.get(group.iterator().next());
+            if(con.size() == len) {
+                continue;
+            }
+            newGroups.addAll(getGroups(connections, group, con, len + 1));
+        }
+        return newGroups;
     }
 }
